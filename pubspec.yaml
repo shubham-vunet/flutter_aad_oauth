@@ -4,7 +4,7 @@ version: 2.1.2
 homepage: https://github.com/p-stannis/flutter_aad_oauth
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.14.0 <3.0.0"
 
 dependencies:
   webview_flutter: ^2.0.4
@@ -13,6 +13,7 @@ dependencies:
   shared_preferences: ^2.0.5
   universal_html: ^2.0.8
   keyboard_actions: ^3.4.0
+  logging:
   flutter:
     sdk: flutter
   flutter_web_plugins:

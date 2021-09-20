@@ -1,10 +1,15 @@
 import 'dart:async';
+
 import 'package:flutter/widgets.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import 'model/config.dart';
+import 'package:logging/logging.dart';
 import 'package:universal_html/html.dart' as html;
+import 'package:webview_flutter/webview_flutter.dart';
+
+import 'model/config.dart';
 import 'model/token.dart';
 import 'request/authorization_request.dart';
+
+final logger = Logger('flutter_aad_oauth:web');
 
 class RequestTokenWeb {
   final StreamController<Map<String, String>> _onCodeListener =
@@ -38,13 +43,15 @@ class RequestTokenWeb {
 
   _webAuth(String initialURL) {
     html.window.onMessage.listen((event) {
-      var tokenParm = 'access_token';
-      if (event.data.toString().contains(tokenParm)) {
+      var tokenParms = ['access_token', 'code'];
+      if (tokenParms
+          .any((tokenparam) => event.data.toString().contains(tokenparam))) {
         _geturlData(event.data.toString());
-      }
-      if (event.data.toString().contains("error")) {
+      } else if (event.data.toString().contains("error")) {
         _closeWebWindow();
         throw new Exception("Access denied or authentation canceled.");
+      }else{
+        throw()
       }
     });
     _popupWin = html.window.open(

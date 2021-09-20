@@ -4,7 +4,10 @@ import 'package:flutter/material.dart'
 import 'package:flutter/widgets.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'model/config.dart';
+import 'package:logging/logging.dart';
 import 'request/authorization_request.dart';
+
+final logger = Logger('flutter_aad_oauth:web');
 
 class RequestCode {
   final StreamController<String?> _onCodeListener = new StreamController();
@@ -39,6 +42,7 @@ class RequestCode {
       javascriptMode: JavascriptMode.unrestricted,
       onPageFinished: (url) => _geturlData(url),
     );
+    logger.info('Initiating Page');
 
     await Navigator.of(_config.context!).push(MaterialPageRoute(
         builder: (context) => Scaffold(body: SafeArea(child: webView))));
@@ -55,8 +59,10 @@ class RequestCode {
     }
 
     var token = uri.queryParameters["code"];
+    logger.info('Code is : $token');
     if (token != null) {
       _onCodeListener.add(token);
+      logger.info('Token recieved: $token');
       Navigator.of(_config.context!).pop();
     }
   }
